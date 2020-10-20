@@ -70,14 +70,15 @@ public class OrderController {
 		return bankList;
 	}
 	
-	//장바구니 -> 오더
+	//장바구니 -> 오더 주문 리스트 이동
 	@RequestMapping(value = "/gpurchaseCartToOrder", produces="application/text; charset=utf8", method = RequestMethod.POST)
 	@ResponseBody
 	public String gpurchaseCartToOrder(@RequestParam(value = "gpurchaseCartList[]") List<String> gpurchaseCartList, @RequestParam(value = "price") Integer price, Model model) {
 		int i;
 		Gpurchase gpurchase;
 		List<Gpurchase> cartList = new ArrayList<Gpurchase>();
-		for(i = 0; i < gpurchaseCartList.size(); i++) {
+		int size = cartList.size();
+		for(i = 0; i < size; i++) {
 			gpurchase = gpurchaseImpl.getGpurchaseDetail(Integer.parseInt(gpurchaseCartList.get(i)));
 			cartList.add(gpurchase);
 		}
@@ -95,7 +96,8 @@ public class OrderController {
 	//공구게시판 주문
 	@Transactional
 	@PostMapping("/gpurchaseOrder")
-	public String gpurchaseOrder(@Valid @ModelAttribute("gpurchaseOrder") Order order, BindingResult result,@ModelAttribute("cartList") List<Gpurchase> cartList, HttpServletRequest request, SessionStatus status) {
+	public String gpurchaseOrder(@Valid @ModelAttribute("gpurchaseOrder") Order order, BindingResult result,
+			@ModelAttribute("cartList") List<Gpurchase> cartList, HttpServletRequest request, SessionStatus status) {
 			
 			if (result.hasErrors()) {
 				return "order/GpaymentForm";
@@ -105,20 +107,27 @@ public class OrderController {
 			order.setUserID(userID);
 			GpurchaseCart gpurchaseCart;
 			Gpurchase gpurchase;
+			
 			//order 생성
 			orderImpl.insertOrder(order);
 			int orderNum = order.getOrderNum();
+			
 			//orderNum에 대한 lineItem 매칭
 			GpurchaseLineItem gLineItem = new GpurchaseLineItem();
+			
 			for(int i = 0; i < cartList.size(); i++) {
 				gLineItem.CartToLineItem(cartList.get(i), orderNum);
 				gLineItemImpl.insertGpurchaseLineItem(gLineItem);
 				gpurchaseImpl.updateParticipant(cartList.get(i).getBoardNum());
 			}
+			
 			//cart제거(주문한 상품 장바구니에서 제거)
 			for(int i = 0; i < cartList.size(); i++) {
+//				해당하는 cart 정보 가져오기
 				gpurchaseCart = new GpurchaseCart(userID, cartList.get(i).getBoardNum());
+//				cart 정보 삭제 
 				gpurchaseImpl.deleteGpurchaseCart(gpurchaseCart);
+//				해당 boardNum에서 장바구니 담은 수 조정
 				gpurchase = gpurchaseImpl.getGpurchaseDetail(cartList.get(i).getBoardNum());
 				int cartAdded = gpurchaseImpl.countCartByboardNum(cartList.get(i).getBoardNum());
 				gpurchase.setCartAdded(cartAdded);

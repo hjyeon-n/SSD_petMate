@@ -42,13 +42,11 @@ public class AnswerController {
 	@ResponseBody
 	public void insertAnswer(ModelAndView mv, HttpServletRequest request,
 			@ModelAttribute("infoReply") Answer answer) {
-		System.out.println("In");
 		String userID = (String) request.getSession().getAttribute("userID");
 		answer.setUserID(userID);
 //		답변 삽입
 		answerFacade.insertAnswer(answer);
 //		게시글 목록에서 답변 수 확인이 가능하도록 하기 위해 지정
-		
 		int answerCnt = answerFacade.answerCnt(answer.getBoardNum());
 		Inquiry inquiry = inquiryFacade.boardDetail(answer.getBoardNum());
 		inquiry.setAnswerCnt(answerCnt);
@@ -78,9 +76,11 @@ public class AnswerController {
 		
 		answerFacade.deleteAnswer(answerNum); // 실제 답변 없애기 -> 만약 답글이 달린 글이면 답글까지 전부 삭제
 		
+//		갱신 연산이 이루어진 후의 cnt
 		int replyCnt = answerFacade.answerCnt(boardNum);
 		Inquiry inquiry = inquiryFacade.boardDetail(boardNum);
 		inquiry.setAnswerCnt(replyCnt);
+//		댓글 수 업데이트
 		inquiryFacade.updateReplyCnt(inquiry);
 	}
 	
@@ -113,7 +113,8 @@ public class AnswerController {
 
 //		답변과 답글의 정렬을 위해 지정
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("replyGID", answerReply.getReplyGID());
+//		이 부분 수정했음
+		map.put("replyGID", answerNum);
 		map.put("replyOrder", answer.getReplyOrder());
 		answerFacade.setAnswerOrder(map);
 		
@@ -125,6 +126,7 @@ public class AnswerController {
 		
 		answerFacade.insertAnswer(answerReply);
 		
+//		답글 수 증가
 		int replyCnt = answerFacade.answerCnt(answer.getBoardNum());
 		Inquiry inquiry = inquiryFacade.boardDetail(answer.getBoardNum());
 		inquiry.setAnswerCnt(replyCnt);

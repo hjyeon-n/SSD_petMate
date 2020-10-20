@@ -26,7 +26,8 @@ public class MainController {
 	
 	@RequestMapping(value = "/index", method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView main(ModelAndView mv, HttpServletRequest request) {
-		
+
+//		월요일 날짜 구하기
 		Date mon = new Date();
         try {
            Calendar cal = Calendar.getInstance();
@@ -36,7 +37,9 @@ public class MainController {
             e.printStackTrace();
         }
 
+//        매주 월요일마다 갱신
         List<Info> weeklyBestInfo = bestFacade.weeklyBestInfo(mon);	
+//        매일 갱신
         Info dailyBestInfo = bestFacade.dailyBestInfo();
         
         List<Inquiry> weeklyBestInquiry = bestFacade.weeklyBestInquiry(mon);

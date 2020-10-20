@@ -52,7 +52,8 @@ public class GpurchaseFormController {
 	}
 	
 	@PostMapping("/gpurchaseForm")
-	public String gpurchaseInsert(@Valid @ModelAttribute("gpurchase") Gpurchase gpurchase, BindingResult result, HttpServletRequest request) {				
+	public String gpurchaseInsert(@Valid @ModelAttribute("gpurchase") Gpurchase gpurchase, 
+			BindingResult result, HttpServletRequest request) {				
 		if (result.hasErrors()) {
 			return "Gpurchase/GpurchaseForm";
 		}

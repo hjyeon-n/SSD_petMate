@@ -19,6 +19,7 @@ public class AdminController {
 	@Autowired
 	private UserFacade userFacade;
 	
+//	관리자 페이지
 	@RequestMapping(value = "/admin", method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView admin(ModelAndView mv,
 			@RequestParam(required = false, defaultValue = "1") int pageNum,

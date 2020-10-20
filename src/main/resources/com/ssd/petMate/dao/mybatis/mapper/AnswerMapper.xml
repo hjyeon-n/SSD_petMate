@@ -4,7 +4,7 @@
 <!-- mapper interface랑 경로를 똑같이 정함 -->
 <mapper namespace="com.ssd.petMate.dao.mybatis.mapper.AnswerMapper">
   <cache />
-  		<!-- 댓글 리스트 가져오기  일단 페이징 없이 시작 -->
+  		<!-- 댓글 리스트 가져오기 -->
 	<select id="getAnswerList" parameterType="int" resultType="com.ssd.petMate.domain.Answer" flushCache="false"
   		useCache="true">
 		SELECT * 
