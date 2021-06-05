@@ -43,7 +43,7 @@
 		
 		<!-- Bean Validation API -->
 		<bean-validation-api.version>2.0.1.Final</bean-validation-api.version>
-		<hibernate-validator.version>6.1.0.Final</hibernate-validator.version>
+		<hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
 	</properties>
 	
 	<dependencies>	
