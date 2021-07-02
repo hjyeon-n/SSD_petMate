@@ -37,7 +37,7 @@
 		
 		<!--Spring Security  -->
 		<!-- <security.version>5.3.3.RELEASE</security.version> -->
-	  	<security.version>5.3.9.RELEASE</security.version>
+	  	<security.version>5.3.10.RELEASE</security.version>
 		
 		<dbcp.version>2.2.0</dbcp.version>
 		
